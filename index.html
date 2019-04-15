@@ -91,6 +91,10 @@ main()
 <button id = "higherButton">Higher</button>
 <button id = "shorterButton">Shorter</button>
 <p> </p>
+<form action="">
+    <input type="radio" name="shading" value="gourand" checked="checked" onchange="selectShading(this)"> Gouraud 	&nbsp;	&nbsp;  
+    <input type="radio" name="shading" value="phong" onchange="selectShading(this)"> Phong
+</form>
 <canvas id="gl-canvas" width="1024" height="1024">
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
