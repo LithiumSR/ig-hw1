@@ -7,18 +7,18 @@ var numChecks = 8;
 var program;
 var c;
 var flag = true;
-var near = -10;
-var far = 10;
+var near = 1.0;
+var far = 5.0;
 var radius = 6.0;
 var theta  = 0.0;
 var phi    = 0.0;
 var dr = 5.0 * Math.PI/180.0;
 
-var left = -2.0;
-var right = 2.0;
-var ytop = 2.0;
-var bottom = -2.0;
-var fScaler = 0.75;
+var left = -1.0;
+var right = 1.0;
+var ytop = 1.0;
+var bottom = -1.0;
+var fScaler = 0.5;
 var fTranslateX = 0.0;
 var fTranslateY = 0.0;
 var fTranslateZ = 0.0;
@@ -130,10 +130,6 @@ window.onload = function init() {
 	scaleMatrixLoc = gl.getUniformLocation( program, "scaleMatrix" );
 	// Setup listeners
 	
-	document.getElementById("Button1").onclick = function(){near  *= 1.1; far *= 1.1;};
-    document.getElementById("Button2").onclick = function(){near  *= 0.9; far *= 0.9;};
-    document.getElementById("Button3").onclick = function(){radius *= 2.0;};
-    document.getElementById("Button4").onclick = function(){radius *= 0.5;};
     document.getElementById("increaseThetaButton").onclick = function(){theta += dr;};
     document.getElementById("decreaseThetaButton").onclick = function(){theta -= dr;};
     document.getElementById("increasePhiButton").onclick = function(){phi += dr;};
@@ -142,15 +138,13 @@ window.onload = function init() {
     document.getElementById("narrowerButton").onclick = function(){left *= 1.1; right *= 1.1;};
     document.getElementById("higherButton").onclick = function(){ytop  *= 0.9; bottom *= 0.9;};
     document.getElementById("shorterButton").onclick = function(){ytop *= 1.1; bottom *= 1.1;};
-    document.getElementById("depthSlider").onchange = function(event) {
-        far = event.target.value/2;
-        near = -event.target.value/2;
+    document.getElementById("nearSlider").onchange = function() {
+        if (this.valueAsNumber == far) return;
+        near = this.valueAsNumber;
     };
-    document.getElementById("nearSlider").onchange = function(event) {
-        near = -event.target.value;
-    };
-    document.getElementById("farSlider").onchange = function(event) {
-        far = event.target.value;
+    document.getElementById("farSlider").onchange = function() {
+        if (this.valueAsNumber == near) return;
+        far = this.valueAsNumber;
     };
 	document.getElementById("fScaler").onchange = function(event) {
         fScaler = event.target.value;
@@ -192,7 +186,25 @@ var render = function() {
     gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(projectionMatrix) );
     gl.uniformMatrix4fv( scaleMatrixLoc, false, flatten(scaleMatrix) );
     gl.uniformMatrix4fv( translateMatrixLoc, false, flatten(translateMatrix) );
+
+    gl.enable(gl.SCISSOR_TEST);
+    var width = gl.canvas.width;
+    var height = gl.canvas.height;
+    gl.scissor(0,  height/2, width / 2, height/2);
+    gl.viewport(0,  height/2, width / 2, height/2); 
     gl.drawArrays( gl.TRIANGLES, 0, numVertices );
 
+    //PERSPECTIVE
+    var aspect = canvas.width/canvas.height;
+    var fovy = 21.0;
+
+
+    projectionMatrix=perspective(fovy,aspect,near,far);
+    gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(projectionMatrix) );
+    
+    gl.scissor(width / 2, height/2, width/2, height/2);
+    gl.viewport(width / 2, height/2, width/2, height/2);
+
+    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
     requestAnimFrame(render);
 }

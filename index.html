@@ -42,25 +42,11 @@ main()
 <script type="text/javascript" src="homework1.js"></script>
 
 <body>
+<div>Near  0.0<input id="nearSlider" type="range" min="0.0" max="10" step="1.0" value="1.0" />10</div>
+<div>Far   0.0<input id="farSlider" type="range" min="0.0" max="10" step="0.1" value="5.0" />10</div>
 
 <div>
-Camera Distance    Far<input id="depthSlider" type="range"
- min="0.05" max="20" step="0.1" value="20" /> Near
-</div>
-
-<div>
-    Near    0.05<input id="nearSlider" type="range"
-     min="0.05" max="10" step="0.1" value="10" /> 10
-</div>
-
-<div>
-    Far    0.05<input id="farSlider" type="range"
-     min="0.05" max="10" step="0.1" value="10" /> 10
-</div>
-
-<div>
-Scaler    0.1<input id="fScaler" type="range"
- min="0.1" max="1.5" step="0.1" value="0.75" /> 1.5
+Scaler    0.1<input id="fScaler" type="range"min="0.1" max="1" step="0.1" value="0.5" /> 1
 </div>
 
 <div>
@@ -77,12 +63,6 @@ TranslateY    -1.0<input id="fTranslateY" type="range"
 TranslateZ    -1.0<input id="fTranslateZ" type="range"
  min="-1.0" max="1.0" step="0.1" value="0.0" /> 1.0
 </div>
-
-<p> </p>
-<button id = "Button1">Increase Z</button>
-<button id = "Button2">Decrease Z</button>
-<button id = "Button3">Increase R</button>
-<button id = "Button4">Decrease R</button>
 
 <p> </p>
 <button id = "increaseThetaButton">Increase theta</button>
