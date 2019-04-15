@@ -25,6 +25,7 @@ var fTranslateZ = 0.0;
 
 var modeViewMatrix, projectionMatrix, translateMatrix, scaleMatrix;
 var modelViewMatrixLoc, projectionMatrixLoc, translateMatrixLoc, scaleMatrixLoc;
+var useGourand = true;
 
 var pointsArray = [];
 var colorsArray = [];
@@ -85,6 +86,10 @@ function colorCube()
     quad( 5, 4, 0, 1 );
 }
 
+
+function selectShading(event) {
+    useGourand = event.value != "phong"
+}
 
 window.onload = function init() {
 
