@@ -22,6 +22,7 @@ var modelViewMatrix,projectionMatrix, translationMatrix, scalingMatrix;
 var modelViewMatrixLoc, projectionMatrixLoc, translationMatrixLoc, scalingMatrixLoc;
 var pointsArray = [];
 var colorsArray = [];
+var normalsArray = [];
 var fTranslateX = 0.0;
 var fTranslateY = 0.0;
 var fTranslateZ = 0.0;
@@ -34,6 +35,17 @@ var right = 1.0;
 var ytop = 1.0;
 var bottom = -1.0;
 var useGourand = true;
+
+var ambientColor, diffuseColor, specularColor;
+var lightPosition = vec4(0.2, 0.2, 10.0, 0.0);
+var lightAmbient = vec4(0.1, 0.1, 0.1, 1.0);
+var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
+var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
+
+var materialAmbient = vec4( 1.0, 0.0, 1.0, 1.0 );
+var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0);
+var materialSpecular = vec4( 1.0, 0.8, 0.0, 1.0 );
+var materialShininess = 100.0;
 
 var vertices = [
     vec4( -0.5, -0.5,  0.5, 1.0 ),
@@ -58,23 +70,22 @@ var vertexColors = [
 ];
 
 function quad(a, b, c, d) {
-     pointsArray.push(vertices[a]);
-     colorsArray.push(vertexColors[a]);
-
-     pointsArray.push(vertices[b]);
-     colorsArray.push(vertexColors[a]);
-
-     pointsArray.push(vertices[c]);
-     colorsArray.push(vertexColors[a]);
-
-     pointsArray.push(vertices[a]);
-     colorsArray.push(vertexColors[a]);
-
-     pointsArray.push(vertices[c]);
-     colorsArray.push(vertexColors[a]);
-
-     pointsArray.push(vertices[d]);
-     colorsArray.push(vertexColors[a]);
+    var t1 = subtract(vertices[b], vertices[a]);
+    var t2 = subtract(vertices[c], vertices[b]);
+    var normal = cross(t1, t2);
+    var normal = vec3(normal);
+    pointsArray.push(vertices[a]);
+    normalsArray.push(normal);
+    pointsArray.push(vertices[b]);
+    normalsArray.push(normal);
+    pointsArray.push(vertices[c]);
+    normalsArray.push(normal);
+    pointsArray.push(vertices[a]);
+    normalsArray.push(normal);
+    pointsArray.push(vertices[c]);
+    normalsArray.push(normal);
+    pointsArray.push(vertices[d]);
+    normalsArray.push(normal);
 }
 
 function colorCube()
@@ -108,26 +119,36 @@ window.onload = function init() {
 
     colorCube();
 
-    var cBuffer = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW );
+    var nBuffer = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, nBuffer );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(normalsArray), gl.STATIC_DRAW );
 
-    var vColor = gl.getAttribLocation( program, "vColor" );
-    gl.vertexAttribPointer( vColor, 4, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vColor );
+    var vNormal = gl.getAttribLocation( program, "vNormal" );
+    gl.vertexAttribPointer( vNormal, 3, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vNormal );
 
     var vBuffer = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer);
+    gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW );
 
-    var vPosition = gl.getAttribLocation( program, "vPosition" );
-    gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vPosition );
+    var vPosition = gl.getAttribLocation(program, "vPosition");
+    gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vPosition);
+
+    var ambientProduct = mult(lightAmbient, materialAmbient);
+    var diffuseProduct = mult(lightDiffuse, materialDiffuse);
+    var specularProduct = mult(lightSpecular, materialSpecular);
 
     modelViewMatrixLoc = gl.getUniformLocation( program, "modelViewMatrix" );
     projectionMatrixLoc = gl.getUniformLocation( program, "projectionMatrix" );
     scalingMatrixLoc = gl.getUniformLocation( program, "scalingMatrix" );
     translationMatrixLoc = gl.getUniformLocation(program, "translationMatrix");
+
+    gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"),flatten(ambientProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"),flatten(diffuseProduct) );
+    gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"),flatten(specularProduct) );
+    gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten(lightPosition) );
+    gl.uniform1f(gl.getUniformLocation(program,"shininess"),materialShininess);
 
     // Setup listeners
     document.getElementById("increaseThetaButton").onclick = function(){theta += dr;};
