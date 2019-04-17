@@ -2,37 +2,38 @@
 
 var canvas;
 var gl;
+
 var numVertices  = 36;
+
 var numChecks = 8;
+
 var program;
+
 var c;
+
 var flag = true;
-var near = 1.0;
+var eye;
+const at = vec3(0.0, 0.0, 0.0);
+const up = vec3(0.0, 1.0, 0.0);
+var dr = 5.0 * Math.PI/180.0;
+var near = 0.1;
 var far = 5.0;
-var radius = 6.0;
+var modelViewMatrix,projectionMatrix, translationMatrix, scalingMatrix;
+var modelViewMatrixLoc, projectionMatrixLoc, translationMatrixLoc, scalingMatrixLoc;
+var pointsArray = [];
+var colorsArray = [];
+var fTranslateX = 0.0;
+var fTranslateY = 0.0;
+var fTranslateZ = 0.0;
+var fScaler = 0.5;
 var theta  = 0.0;
 var phi    = 0.0;
-var dr = 5.0 * Math.PI/180.0;
-
+var radius = 1.0;
 var left = -1.0;
 var right = 1.0;
 var ytop = 1.0;
 var bottom = -1.0;
-var fScaler = 0.5;
-var fTranslateX = 0.0;
-var fTranslateY = 0.0;
-var fTranslateZ = 0.0;
-
-var modeViewMatrix, projectionMatrix, translateMatrix, scaleMatrix;
-var modelViewMatrixLoc, projectionMatrixLoc, translateMatrixLoc, scaleMatrixLoc;
 var useGourand = true;
-
-var pointsArray = [];
-var colorsArray = [];
-
-const at = vec3(0.0, 0.0, 0.0);
-const up = vec3(0.0, 1.0, 0.0);
-
 
 var vertices = [
     vec4( -0.5, -0.5,  0.5, 1.0 ),
@@ -59,7 +60,7 @@ var vertexColors = [
 function quad(a, b, c, d) {
      pointsArray.push(vertices[a]);
      colorsArray.push(vertexColors[a]);
- 
+
      pointsArray.push(vertices[b]);
      colorsArray.push(vertexColors[a]);
 
@@ -87,10 +88,6 @@ function colorCube()
 }
 
 
-function selectShading(event) {
-    useGourand = event.value != "phong"
-}
-
 window.onload = function init() {
 
     canvas = document.getElementById( "gl-canvas" );
@@ -106,7 +103,6 @@ window.onload = function init() {
     //
     //  Load shaders and initialize attribute buffers
     //
-	
     program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
 
@@ -127,14 +123,13 @@ window.onload = function init() {
     var vPosition = gl.getAttribLocation( program, "vPosition" );
     gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
-	
-	
+
     modelViewMatrixLoc = gl.getUniformLocation( program, "modelViewMatrix" );
     projectionMatrixLoc = gl.getUniformLocation( program, "projectionMatrix" );
-    translateMatrixLoc = gl.getUniformLocation( program, "translateMatrix" );
-	scaleMatrixLoc = gl.getUniformLocation( program, "scaleMatrix" );
-	// Setup listeners
-	
+    scalingMatrixLoc = gl.getUniformLocation( program, "scalingMatrix" );
+    translationMatrixLoc = gl.getUniformLocation(program, "translationMatrix");
+
+    // Setup listeners
     document.getElementById("increaseThetaButton").onclick = function(){theta += dr;};
     document.getElementById("decreaseThetaButton").onclick = function(){theta -= dr;};
     document.getElementById("increasePhiButton").onclick = function(){phi += dr;};
@@ -152,64 +147,73 @@ window.onload = function init() {
         far = this.valueAsNumber;
     };
 	document.getElementById("fScaler").onchange = function(event) {
-        fScaler = event.target.value;
+        fScaler = event.target.valueAsNumber;
     };
 	document.getElementById("fTranslateX").onchange = function(event) {
-        fTranslateX = event.target.value;
+        fTranslateX = event.target.valueAsNumber;
     };
 	document.getElementById("fTranslateY").onchange = function(event) {
-        fTranslateY = event.target.value;
+        fTranslateY = event.target.valueAsNumber;
     };
 	document.getElementById("fTranslateZ").onchange = function(event) {
-        fTranslateY = event.target.value;
+        fTranslateZ = event.target.valueAsNumber;
     };
+
     render();
 }
 
 var render = function() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    	
-	var scaleMatrix = [
-		fScaler, 0.0, 0.0, 0.0,
-		0.0, fScaler, 0.0, 0.0,
-		0.0, 0.0, fScaler, 0.0,
-		0.0, 0.0, 0.0, 1.0];
-		
-	var translateMatrix = [
-		1.0, 0.0, 0.0, 0.0,
-		0.0, 1.0, 0.0, 0.0,
-		0.0, 0.0, 1.0, 0.0,
-		fTranslateX, fTranslateY, fTranslateZ, 1.0];
-        
-        
-	var eye = vec3( radius*Math.sin(theta)*Math.cos(phi),
-                    radius*Math.sin(theta)*Math.sin(phi),
-                    radius*Math.cos(theta));
-    var modelViewMatrix = lookAt( eye, at, up );
-    var projectionMatrix = ortho( left, right, bottom, ytop, near, far );
-	gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
-    gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(projectionMatrix) );
-    gl.uniformMatrix4fv( scaleMatrixLoc, false, flatten(scaleMatrix) );
-    gl.uniformMatrix4fv( translateMatrixLoc, false, flatten(translateMatrix) );
 
+    // Translation matrix
+    var translationMatrix = [
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        fTranslateX, fTranslateY, fTranslateZ, 1.0
+    ];
+    // Scaling matrix
+    var scalingMatrix = [
+        fScaler, 0.0, 0.0, 0.0,
+        0.0, fScaler, 0.0, 0.0,
+        0.0, 0.0, fScaler, 0.0,
+        0.0, 0.0, 0.0, 1.0
+    ];
+
+    // Orthogonal view
+    eye = vec3(radius*Math.sin(phi), radius*Math.sin(theta), radius*Math.cos(phi));
+    modelViewMatrix = lookAt(eye, at , up);
+    projectionMatrix = ortho( left, right, bottom, ytop, near, far );
+
+    //Map variables
+    gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
+    gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(projectionMatrix) );
+    gl.uniformMatrix4fv(scalingMatrixLoc, false, flatten(scalingMatrix));
+    gl.uniformMatrix4fv(translationMatrixLoc, false, translationMatrix);
+    gl.uniform1i(gl.getUniformLocation(program, "useGourand"), useGourand);
+
+    // Split canvas
     gl.enable(gl.SCISSOR_TEST);
     var width = gl.canvas.width;
     var height = gl.canvas.height;
     gl.scissor(0,  height/2, width / 2, height/2);
     gl.viewport(0,  height/2, width / 2, height/2); 
+    
     gl.drawArrays( gl.TRIANGLES, 0, numVertices );
-
-    //PERSPECTIVE
+    
+    // Create perspective view of the object
     var aspect = canvas.width/canvas.height;
-    var fovy = 21.0;
-
-
+    var fovy = 95.0;
     projectionMatrix=perspective(fovy,aspect,near,far);
     gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(projectionMatrix) );
     
     gl.scissor(width / 2, height/2, width/2, height/2);
     gl.viewport(width / 2, height/2, width/2, height/2);
-
     gl.drawArrays( gl.TRIANGLES, 0, numVertices );
     requestAnimFrame(render);
+}
+
+
+function selectShading(event) {
+    useGourand = event.value != "phong"
 }
