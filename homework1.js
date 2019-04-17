@@ -34,7 +34,7 @@ var left = -1.0;
 var right = 1.0;
 var ytop = 1.0;
 var bottom = -1.0;
-var useGourand = true;
+var useGouraud = true;
 
 var ambientColor, diffuseColor, specularColor;
 var lightPosition = vec4(0.2, 0.2, 10.0, 0.0);
@@ -211,7 +211,7 @@ var render = function() {
     gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(projectionMatrix) );
     gl.uniformMatrix4fv(scalingMatrixLoc, false, flatten(scalingMatrix));
     gl.uniformMatrix4fv(translationMatrixLoc, false, translationMatrix);
-    gl.uniform1i(gl.getUniformLocation(program, "useGourand"), useGourand);
+    gl.uniform1i(gl.getUniformLocation(program, "useGouraud"), useGouraud);
 
     // Split canvas
     gl.enable(gl.SCISSOR_TEST);
@@ -236,5 +236,5 @@ var render = function() {
 
 
 function selectShading(event) {
-    useGourand = event.value != "phong"
+    useGouraud = event.value != "phong"
 }
