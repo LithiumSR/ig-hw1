@@ -45,15 +45,11 @@ varying vec3 fN, fL, fE;
 void main(){
   vec3 pos = (modelViewMatrix*translationMatrix*scalingMatrix*vPosition).xyz;
   vec3 L = normalize(lightPosition.xyz - pos);
-  vec3 E = normalize( -pos );
+  vec3 E = -normalize( pos );
   vec3 H = normalize( L + E );
   vec4 NN = vec4(vNormal, 0);
-  vec3 N = normalize((modelViewMatrix * translationMatrix*scalingMatrix * NN).xyz);
+  vec3 N = normalize((translationMatrix*scalingMatrix* NN).xyz);
   if (!useGouraud) {
-    fL = L;
-    fN = N;
-    fE = E;
-  } else {
     vec4 ambient = ambientProduct;
     float Kd = max( dot(L, N), 0.0 );
     vec4  diffuse = Kd*diffuseProduct;
@@ -61,9 +57,13 @@ void main(){
     vec4  specular = Ks * specularProduct;
     if( dot(L, N) < 0.0 ) {
       specular = vec4(0.0, 0.0, 0.0, 1.0);
-    } 
+    }   
     fColor = ambient + diffuse +specular;
-    fColor.a = 1.0;  
+    fColor.a = 1.0;
+  }else{
+    fL = L;
+    fN = N;
+    fE = E;
   }
   gl_Position = projectionMatrix * modelViewMatrix * translationMatrix*scalingMatrix* vPosition;
 }
@@ -83,6 +83,8 @@ void main(){
   
   void main(){
     if (!useGouraud) {
+      gl_FragColor = fColor;
+    } else {
       vec4 fColorF;
       vec3 H = normalize(fL + fE);
       vec4 ambient = ambientProduct;
@@ -94,10 +96,8 @@ void main(){
       fColorF = ambient + diffuse + specular;
       fColorF.a = 1.0;
       gl_FragColor = fColorF;
-    } else {
-      gl_FragColor = fColor;
-    }    
   }
+}    
 </script>
 
 <script type="text/javascript" src="Common/webgl-utils.js"></script>

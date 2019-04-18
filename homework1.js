@@ -37,7 +37,7 @@ var bottom = -1.0;
 var useGouraud = true;
 
 var ambientColor, diffuseColor, specularColor;
-var lightPosition = vec4(0.2, 0.2, 10.0, 0.0);
+var lightPosition = vec4(1.0, 1.0, 1.0, 0.0);
 var lightAmbient = vec4(0.1, 0.1, 0.1, 1.0);
 var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
@@ -144,11 +144,11 @@ window.onload = function init() {
     scalingMatrixLoc = gl.getUniformLocation( program, "scalingMatrix" );
     translationMatrixLoc = gl.getUniformLocation(program, "translationMatrix");
 
-    gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"),flatten(ambientProduct));
-    gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"),flatten(diffuseProduct) );
-    gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"),flatten(specularProduct) );
-    gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten(lightPosition) );
-    gl.uniform1f(gl.getUniformLocation(program,"shininess"),materialShininess);
+    gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition));
+    gl.uniform1f(gl.getUniformLocation(program, "shininess"), materialShininess);
 
     // Setup listeners
     document.getElementById("increaseThetaButton").onclick = function(){theta += dr;};
