@@ -42,10 +42,10 @@ var lightAmbient = vec4(0.1, 0.1, 0.1, 1.0);
 var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 
-var materialAmbient = vec4( 1.0, 0.0, 1.0, 1.0 );
-var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0);
-var materialSpecular = vec4( 1.0, 0.8, 0.0, 1.0 );
-var materialShininess = 100.0;
+var materialAmbient = vec4( 	0.1745, 0.01175, 0.01175);
+var materialDiffuse = vec4( 0.61424, 0.04136, 0.04136);
+var materialSpecular = vec4( 0.727811, 0.626959, 0.626959);
+var materialShininess = 60.0;
 
 var vertices = [
     vec4( -0.5, -0.5,  0.5, 1.0 ),
