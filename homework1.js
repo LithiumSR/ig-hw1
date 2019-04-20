@@ -39,14 +39,14 @@ var useGouraud = true;
 var texSize = 32;
 
 var ambientColor, diffuseColor, specularColor;
-var lightPosition = vec4(1.0, 1.0, 1.0, 0.0);
-var lightAmbient = vec4(0.1, 0.1, 0.1, 1.0);
+var lightPosition = vec4(0.7, 0.5, 0.5, 0.0);
+var lightAmbient = vec4(0.9, 0.9, 0.9, 1.0);
 var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 
-var materialAmbient = vec4( 0.1745, 0.01175, 0.01175);
-var materialDiffuse = vec4( 0.61424, 0.04136, 0.04136);
-var materialSpecular = vec4( 0.727811, 0.626959, 0.626959);
+var materialAmbient = vec4( 0.1, 0.18725,	0.1745	);
+var materialDiffuse = vec4( 0.396, 0.74151, 0.69102);
+var materialSpecular = vec4( 0.297254	,0.30829,	0.306678);
 var materialShininess = 60.0;
 
 var vertices = [
@@ -67,6 +67,7 @@ var texCoord = [
     vec2(1, 0)
 ];
 
+/** 
 var vertexColors = [
     vec4( 0.0, 0.0, 0.0, 1.0 ),  // black
     vec4( 1.0, 0.0, 0.0, 1.0 ),  // red
@@ -77,7 +78,7 @@ var vertexColors = [
     vec4( 0.0, 1.0, 1.0, 1.0 ),  // white
     vec4( 0.0, 1.0, 1.0, 1.0 )   // cyan
 ];
-
+*/
 function quad(a, b, c, d) {
     var t1 = subtract(vertices[b], vertices[a]);
     var t2 = subtract(vertices[c], vertices[b]);
