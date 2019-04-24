@@ -51,7 +51,7 @@ void main(){
   vec3 H = normalize( L + E );
   vec4 NN = vec4(vNormal, 0);
   vec3 N = normalize((translationMatrix*scalingMatrix* NN).xyz);
-  if (!useGouraud) {
+  if (useGouraud) {
     vec4 ambient = ambientProduct;
     float Kd = max( dot(L, N), 0.0 );
     vec4  diffuse = Kd*diffuseProduct;
@@ -85,7 +85,7 @@ void main(){
   uniform sampler2D texture;
   
   void main(){
-    if (!useGouraud) {
+    if (useGouraud) {
       gl_FragColor = fColor*texture2D( texture, fTexCoord );
     } else {
       vec4 fColorF;
