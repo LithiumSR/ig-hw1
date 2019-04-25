@@ -99,7 +99,7 @@ void main(){
   uniform vec4 ambientProduct, diffuseProduct, specularProduct;
   uniform float shininess;
   uniform bool useGouraud, useTexture;
-  
+
   // per-fragment interpolated values from the vertex shader
   varying vec3 fN, fL, fE;
   
@@ -178,7 +178,7 @@ void main(){
 
   <br />
   <fieldset>
-    <legend>Camera position</legend>
+    <legend>Camera</legend>
     <button id="increaseThetaButton" class="btn btn-primary btn-sm">Increase theta</button>
     <button id="decreaseThetaButton" class="btn btn-primary btn-sm">Decrease theta</button>
     <button id="increasePhiButton" class="btn btn-primary btn-sm">Increase phi</button>
@@ -194,7 +194,7 @@ void main(){
   </fieldset>
   <fieldset>
     <legend>Texture</legend>
-    <button id="useTexture" class="btn btn-warning" style="margin-left: 10px;">Deactivate texture</button>
+    <button id="useTexture" class="btn btn-warning" style="margin-left: 10px;">Disable texture</button>
   </fieldset>
 
   <body>

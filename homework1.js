@@ -261,7 +261,7 @@ window.onload = function init() {
         useTexture = !useTexture;
         var elem = document.getElementById("useTexture");
         if (useTexture) {
-            elem.innerHTML = "Deactivate texture";
+            elem.innerHTML = "Disable texture";
         } else {
             elem.innerHTML = "Enable texture";
         }
