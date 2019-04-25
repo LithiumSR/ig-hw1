@@ -8,6 +8,8 @@
     border: 1px solid silver;
     padding: 8px;
     border-radius: 4px;
+    display: inline;
+
   }
 
   legend {
@@ -150,13 +152,6 @@ void main(){
         step="0.1" value="0.5" class="slider"> 1</div>
   </fieldset>
   <fieldset>
-    <legend>Camera position</legend>
-    <button id="increaseThetaButton" class="btn btn-primary btn-sm">Increase theta</button>
-    <button id="decreaseThetaButton" class="btn btn-primary btn-sm">Decrease theta</button>
-    <button id="increasePhiButton" class="btn btn-primary btn-sm">Increase phi</button>
-    <button id="decreasePhiButton" class="btn btn-primary btn-sm">Decrease phi</button>
-  </fieldset>
-  <fieldset>
     <legend>View</legend>
     <button id="widerButton" class="btn btn-primary btn-sm">Wider</button>
     <button id="narrowerButton" class="btn btn-primary btn-sm">Narrower</button>
@@ -170,6 +165,24 @@ void main(){
         step="0.1" value="95.0" class="slider"> 180</div>
   </fieldset>
   <fieldset>
+    <legend>Light</legend>
+    <div class="slidecontainer">LightX -10.0 <input autocomplete="off" id="lightX" type="range" min="-10.0" max="10.0"
+        step="0.1" value="0.7" class="slider" /> 10.0</div>
+    <div class="slidecontainer">LightY -10.0 <input autocomplete="off" id="lightY" type="range" min="-10.0" max="10.0"
+        step="0.1" value="0.5" class="slider" /> 10.0</div>
+    <div class="slidecontainer">LightZ -10.0 <input autocomplete="off" id="lightZ" type="range" min="-10.0" max="10.0"
+        step="0.1" value="0.5" class="slider" /> 10.0</div>
+  </fieldset>
+
+  <br />
+  <fieldset>
+    <legend>Camera position</legend>
+    <button id="increaseThetaButton" class="btn btn-primary btn-sm">Increase theta</button>
+    <button id="decreaseThetaButton" class="btn btn-primary btn-sm">Decrease theta</button>
+    <button id="increasePhiButton" class="btn btn-primary btn-sm">Increase phi</button>
+    <button id="decreasePhiButton" class="btn btn-primary btn-sm">Decrease phi</button>
+  </fieldset>
+  <fieldset>
     <legend>Shading tecnique</legend>
     <form action="">
       <input type="radio" name="shading" value="gourand" checked="checked" onchange="selectShading(this)"> Gouraud
@@ -177,8 +190,10 @@ void main(){
       <input type="radio" name="shading" value="phong" onchange="selectShading(this)"> Phong
     </form>
   </fieldset>
-  <button id="useTexture" class="btn btn-warning" style="margin-left: 10px;">Deactivate texture</button>
-  <p> </p>
+  <fieldset>
+    <legend>Texture</legend>
+    <button id="useTexture" class="btn btn-warning" style="margin-left: 10px;">Deactivate texture</button>
+  </fieldset>
 
   <body>
     <canvas id="gl-canvas" width="1024" height="1024">

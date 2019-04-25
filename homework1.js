@@ -34,13 +34,15 @@ var left = -1.0;
 var right = 1.0;
 var ytop = 1.0;
 var bottom = -1.0;
+var lightX = 0.7;
+var lightY = 0.5;
+var lightZ = 0.5;
 var useGouraud = true;
 var useTexture = true;
 var texSize = 32;
 var fovy = 95.0;
 
 var ambientColor, diffuseColor, specularColor;
-var lightPosition = vec4(0.7, 0.5, 0.5, 0.0);
 var lightAmbient = vec4(0.9, 0.9, 0.9, 1.0);
 var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
@@ -210,7 +212,6 @@ window.onload = function init() {
     gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct));
     gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct));
     gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct));
-    gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition));
     gl.uniform1f(gl.getUniformLocation(program, "shininess"), materialShininess);
 
     // Setup listeners
@@ -242,6 +243,17 @@ window.onload = function init() {
 	document.getElementById("translateZ").onchange = function(event) {
         fTranslateZ = event.target.valueAsNumber;
     };
+
+    document.getElementById("lightX").onchange = function(event) {
+        lightX = event.target.valueAsNumber;
+    };
+	document.getElementById("lightY").onchange = function(event) {
+        lightY = event.target.valueAsNumber;
+    };
+	document.getElementById("lightZ").onchange = function(event) {
+        lightZ = event.target.valueAsNumber;
+    };
+
     document.getElementById("fovySlider").onchange = function(event) {
         fovy = event.target.valueAsNumber;
     };
@@ -276,6 +288,7 @@ var render = function() {
         0.0, 0.0, 0.0, 1.0
     ];
 
+    var lightPosition = vec4(lightX, lightY, lightZ, 1.0);
     // Orthogonal view
     eye = vec3(radius*Math.sin(phi), radius*Math.sin(theta), radius*Math.cos(phi));
     modelViewMatrix = lookAt(eye, at , up);
@@ -288,6 +301,8 @@ var render = function() {
     gl.uniformMatrix4fv(translationMatrixLoc, false, translationMatrix);
     gl.uniform1i(gl.getUniformLocation(program, "useGouraud"), useGouraud);
     gl.uniform1i(gl.getUniformLocation(program, "useTexture"), useTexture);
+
+    gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition));
     // Split canvas
     gl.enable(gl.SCISSOR_TEST);
     var width = gl.canvas.width;
