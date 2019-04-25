@@ -11,7 +11,6 @@ var program;
 
 var c;
 
-var flag = true;
 var eye;
 const at = vec3(0.0, 0.0, 0.0);
 const up = vec3(0.0, 1.0, 0.0);
@@ -36,7 +35,9 @@ var right = 1.0;
 var ytop = 1.0;
 var bottom = -1.0;
 var useGouraud = true;
+var useTexture = true;
 var texSize = 32;
+var fovy = 95.0;
 
 var ambientColor, diffuseColor, specularColor;
 var lightPosition = vec4(0.7, 0.5, 0.5, 0.0);
@@ -241,6 +242,18 @@ window.onload = function init() {
 	document.getElementById("translateZ").onchange = function(event) {
         fTranslateZ = event.target.valueAsNumber;
     };
+    document.getElementById("fovySlider").onchange = function(event) {
+        fovy = event.target.valueAsNumber;
+    };
+    document.getElementById("useTexture").onclick = function(){
+        useTexture = !useTexture;
+        var elem = document.getElementById("useTexture");
+        if (useTexture) {
+            elem.innerHTML = "Deactivate texture";
+        } else {
+            elem.innerHTML = "Enable texture";
+        }
+    }
 
     render();
 }
@@ -274,7 +287,7 @@ var render = function() {
     gl.uniformMatrix4fv(scalingMatrixLoc, false, flatten(scalingMatrix));
     gl.uniformMatrix4fv(translationMatrixLoc, false, translationMatrix);
     gl.uniform1i(gl.getUniformLocation(program, "useGouraud"), useGouraud);
-
+    gl.uniform1i(gl.getUniformLocation(program, "useTexture"), useTexture);
     // Split canvas
     gl.enable(gl.SCISSOR_TEST);
     var width = gl.canvas.width;
@@ -286,7 +299,6 @@ var render = function() {
     
     // Create perspective view of the object
     var aspect = canvas.width/canvas.height;
-    var fovy = 95.0;
     projectionMatrix=perspective(fovy,aspect,near,far);
     gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(projectionMatrix) );
     
