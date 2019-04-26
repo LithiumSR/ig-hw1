@@ -130,7 +130,8 @@ var image1 = new Array()
            image1[i][j] = new Float32Array(4);
     for (var i =0; i<texSize; i++) for (var j=0; j<texSize; j++) {
         var c = (((i & 0x8) == 0) ^ ((j & 0x8)  == 0));
-        image1[i][j] = [c, c, c, 1];
+        if (c == 0) image1[i][j] = [0, 204, 102, 1];
+		else image1[i][j] = [c, c, c, 1];
     }
 
 var image2 = new Uint8Array(4*texSize*texSize);
