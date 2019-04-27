@@ -209,11 +209,17 @@ window.onload = function init() {
     gl.enableVertexAttribArray(vTexCoord);
     configureTexture(image2);
 
-    // Map light-related variables
-    gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct));
-    gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct));
-    gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct));
-    gl.uniform1f(gl.getUniformLocation(program, "shininess"), materialShininess);
+    // Map fixed light-related variables
+    // there are vertex and frag uniform variables because of different precision between the shaders
+    gl.uniform4fv(gl.getUniformLocation(program, "vAmbientProduct"), flatten(ambientProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "vDiffuseProduct"), flatten(diffuseProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "vSpecularProduct"), flatten(specularProduct));
+    gl.uniform1f(gl.getUniformLocation(program, "vShininess"), materialShininess);
+    
+    gl.uniform4fv(gl.getUniformLocation(program, "fAmbientProduct"), flatten(ambientProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "fDiffuseProduct"), flatten(diffuseProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "fSpecularProduct"), flatten(specularProduct));
+    gl.uniform1f(gl.getUniformLocation(program, "fShininess"), materialShininess);
 
     // Setup listeners
     document.getElementById("increaseThetaButton").onclick = function(){theta += dr;};
