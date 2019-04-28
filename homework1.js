@@ -23,10 +23,10 @@ var pointsArray = [];
 var colorsArray = [];
 var texCoordsArray = [];
 var normalsArray = [];
-var fTranslateX = 0.0;
-var fTranslateY = 0.0;
-var fTranslateZ = 0.0;
-var fScaler = 0.5;
+var objTranslateX = 0.0;
+var objTranslateY = 0.0;
+var objTranslateZ = 0.0;
+var objScaler = 0.5;
 var theta  = 0.0;
 var phi    = 0.0;
 var radius = 1.0;
@@ -239,16 +239,16 @@ window.onload = function init() {
         far = this.valueAsNumber;
     };
 	document.getElementById("scaler").onchange = function(event) {
-        fScaler = event.target.valueAsNumber;
+        objScaler = event.target.valueAsNumber;
     };
 	document.getElementById("translateX").onchange = function(event) {
-        fTranslateX = event.target.valueAsNumber;
+        objTranslateX = event.target.valueAsNumber;
     };
 	document.getElementById("translateY").onchange = function(event) {
-        fTranslateY = event.target.valueAsNumber;
+        objTranslateY = event.target.valueAsNumber;
     };
 	document.getElementById("translateZ").onchange = function(event) {
-        fTranslateZ = event.target.valueAsNumber;
+        objTranslateZ = event.target.valueAsNumber;
     };
 
     document.getElementById("lightX").onchange = function(event) {
@@ -285,13 +285,13 @@ var render = function() {
         1.0, 0.0, 0.0, 0.0,
         0.0, 1.0, 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,
-        fTranslateX, fTranslateY, fTranslateZ, 1.0
+        objTranslateX, objTranslateY, objTranslateZ, 1.0
     ];
     // Scaling matrix
     var scalingMatrix = [
-        fScaler, 0.0, 0.0, 0.0,
-        0.0, fScaler, 0.0, 0.0,
-        0.0, 0.0, fScaler, 0.0,
+        objScaler, 0.0, 0.0, 0.0,
+        0.0, objScaler, 0.0, 0.0,
+        0.0, 0.0, objScaler, 0.0,
         0.0, 0.0, 0.0, 1.0
     ];
 
